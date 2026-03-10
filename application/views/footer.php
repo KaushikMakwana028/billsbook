@@ -1,0 +1,125 @@
+<script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    const site_url = "<?= base_url() ?>";
+</script>
+<script src="<?= base_url('assets/js/custom.js?v=' . filemtime(FCPATH . 'assets/js/custom.js')) ?>"></script>
+<script src="<?= base_url('assets/js/app.js') ?>"></script>
+<script src="<?= base_url('assets/plugins/simplebar/js/simplebar.min.js') ?>"></script>
+<script src="<?= base_url('assets/plugins/metismenu/js/metisMenu.min.js') ?>"></script>
+<script src="<?= base_url('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') ?>"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var body = document.body;
+        var sidebar = document.querySelector('.sidebar-wrapper');
+        var toggleButton = document.querySelector('.mobile-toggle-menu');
+        var closeButton = document.querySelector('.mobile-toggle-icon');
+        var backdrop = document.querySelector('.mobile-sidebar-backdrop');
+
+        document.querySelectorAll('.top-menu .dropdown, .top-menu .dropdown-menu').forEach(function(el) {
+            el.classList.remove('show');
+        });
+        document.body.classList.remove('sidebar-preload');
+
+        function closeMobileSidebar() {
+            body.classList.remove('mobile-sidebar-open');
+        }
+
+        function toggleMobileSidebar(event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            if (window.innerWidth <= 991.98) {
+                body.classList.toggle('mobile-sidebar-open');
+            }
+        }
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', toggleMobileSidebar);
+        }
+
+        if (closeButton) {
+            closeButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                closeMobileSidebar();
+            });
+        }
+
+        if (backdrop) {
+            backdrop.addEventListener('click', closeMobileSidebar);
+        }
+
+        if (sidebar) {
+            sidebar.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 991.98) {
+                        closeMobileSidebar();
+                    }
+                });
+            });
+        }
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 991.98) {
+                closeMobileSidebar();
+            }
+        });
+
+        document.querySelectorAll('.js-swal-delete').forEach(function(el) {
+            el.addEventListener('click', function(event) {
+                event.preventDefault();
+                var href = this.getAttribute('href');
+                var title = this.getAttribute('data-swal-title') || 'Delete item?';
+                var text = this.getAttribute('data-swal-text') || 'This action cannot be undone.';
+
+                Swal.fire({
+                    title: title,
+                    text: text,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#d33'
+                }).then(function(result) {
+                    if (result.isConfirmed && href) {
+                        window.location.href = href;
+                    }
+                });
+            });
+        });
+    });
+</script>
+<?php
+$flashSuccess = $this->session->flashdata('success');
+$flashError = $this->session->flashdata('error');
+?>
+<?php if (!empty($flashSuccess) || !empty($flashError)): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: '<?= !empty($flashError) ? 'error' : 'success' ?>',
+                title: '<?= !empty($flashError) ? 'Error' : 'Success' ?>',
+                text: <?= json_encode(!empty($flashError) ? $flashError : $flashSuccess) ?>,
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+<?php endif; ?>
+<?php
+$routerClass = $this->router->class ?? '';
+$routerMethod = $this->router->method ?? '';
+$isDashboardPage = ($routerClass === 'dashboard' && $routerMethod === 'index');
+?>
+<?php if ($isDashboardPage): ?>
+    <script src="<?= base_url('assets/js/index.js') ?>"></script>
+    <script src="<?= base_url('assets/plugins/peity/jquery.peity.min.js') ?>"></script>
+    <script>
+        $(".data-attributes span").peity("donut");
+    </script>
+<?php endif; ?>
+</body>
+
+</html>
