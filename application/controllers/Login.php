@@ -50,6 +50,7 @@ class Login extends CI_Controller
                     'user_name' => $user->name,
                     'business_name' => $user->business_name,
                     'email' => $user->email,
+                    'address' => $user->address ?? '',
                     'profile_image' => $user->profile_image,
                     'role' => $user->role,
                     'logged_in' => true
@@ -115,6 +116,7 @@ class Login extends CI_Controller
             'business_name' => $businessName,
             'mobile' => $mobile,
             'email' => $email,
+            'address' => '',
             'profile_image' => $profileImage,
             'password' => md5($plainPassword),
             'normal_password' => $plainPassword,
@@ -130,6 +132,7 @@ class Login extends CI_Controller
                 'user_name' => $insertData['name'],
                 'business_name' => $insertData['business_name'],
                 'email' => $insertData['email'],
+                'address' => $insertData['address'],
                 'profile_image' => $insertData['profile_image'],
                 'role' => 1,
                 'logged_in' => true

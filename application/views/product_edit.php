@@ -39,9 +39,9 @@
             }
 
             .product-preview {
-                width: 120px;
-                height: 120px;
-                border-radius: 18px;
+                width: 54px;
+                height: 54px;
+                border-radius: 14px;
                 object-fit: cover;
                 border: 1px solid #e2e8f0;
                 background: #f8fafc;
@@ -51,10 +51,12 @@
                 display: flex;
                 align-items: center;
                 gap: 1rem;
-                padding: 1rem;
+                padding: 0.7rem 0.85rem;
                 border: 1px dashed #cbd5e1;
-                border-radius: 18px;
+                border-radius: 14px;
                 background: #f8fbff;
+                margin-top: 0.85rem;
+                width: 100%;
             }
 
             .product-file-input {
@@ -71,27 +73,73 @@
                 display: flex;
                 align-items: center;
                 overflow: hidden;
+                width: 100%;
+                box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
             }
 
             .product-file-button {
-                min-height: 54px;
+                min-height: 40px;
+                min-width: 124px;
+                margin-left: 7px;
                 padding: 0 1rem;
                 display: inline-flex;
                 align-items: center;
-                background: #eff6ff;
-                color: #1d4ed8;
+                justify-content: center;
+                border-radius: 10px;
+                background: linear-gradient(135deg, #2563eb, #1d4ed8);
+                color: #ffffff;
                 font-weight: 600;
                 white-space: nowrap;
-                border-right: 1px solid #dbe3ef;
+                box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
                 cursor: pointer;
             }
 
             .product-file-name {
-                padding: 0 1rem;
-                color: #64748b;
+                flex: 1 1 auto;
+                padding: 0 1rem 0 0.9rem;
+                color: #475569;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                font-weight: 500;
+            }
+
+            .product-image-inline {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) 180px;
+                gap: 1rem;
+                align-items: stretch;
+                width: 100%;
+            }
+
+            .product-qty-field .form-control {
+                text-align: center;
+            }
+
+            .product-image-field {
+                min-width: 0;
+            }
+
+            .product-image-field .product-file-trigger,
+            .product-image-field .product-preview-box,
+            .product-image-field .product-file-name {
+                min-width: 0;
+            }
+
+            .product-preview-box {
+                justify-content: center;
+            }
+
+            @media (max-width: 767.98px) {
+                .product-image-inline {
+                    grid-template-columns: 1fr;
+                }
+
+                .product-file-button {
+                    min-width: 112px;
+                    margin-left: 6px;
+                    padding: 0 0.85rem;
+                }
             }
         </style>
 
@@ -99,12 +147,11 @@
             <div class="col-12">
                 <div class="card rounded-4 product-form-card">
                     <div class="card-body p-4 p-xl-5">
-                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+                        <div class="mb-4">
                             <div>
                                 <h2 class="product-form-title mb-2">Edit Product</h2>
                                 <p class="product-form-copy mb-0">Update product details for this admin and replace the image if needed.</p>
                             </div>
-                            <img src="<?= htmlspecialchars($productImageUrl ?? base_url('assets/images/Default.jpg')) ?>" class="product-preview" alt="Product preview" onerror="this.src='<?= base_url('assets/images/Default.jpg') ?>'">
                         </div>
 
                         <?php if (!empty($productError)): ?>
@@ -132,25 +179,27 @@
                                     <input type="text" name="name" value="<?= set_value('name', $product['name'] ?? '') ?>" class="form-control" placeholder="Enter product name">
                                     <?= form_error('name') ?>
                                 </div>
-                                <div class="col-md-6 product-field">
+                                <div class="col-md-8 product-field">
                                     <label class="form-label">Price</label>
                                     <input type="text" name="price" value="<?= set_value('price', $product['price'] ?? '') ?>" class="form-control" placeholder="Enter price">
                                     <?= form_error('price') ?>
                                 </div>
-                                <div class="col-md-6 product-field">
-                                    <label class="form-label">Change Product Image</label>
-                                    <input type="file" name="product_image" id="product_image_edit" class="product-file-input" accept=".jpg,.jpeg,.png,.webp">
-                                    <label for="product_image_edit" class="product-file-trigger w-100">
-                                        <span class="product-file-button">Choose File</span>
-                                        <span class="product-file-name" id="product_file_name_edit">No file chosen</span>
-                                    </label>
+                                <div class="col-md-4 product-field product-qty-field">
+                                    <label class="form-label">Stock Quantity</label>
+                                    <input type="number" min="0" name="quantity" value="<?= set_value('quantity', $product['quantity'] ?? '0') ?>" class="form-control" placeholder="Enter quantity">
+                                    <?= form_error('quantity') ?>
                                 </div>
-                                <div class="col-12">
-                                    <div class="product-preview-box">
-                                        <img src="<?= htmlspecialchars($productImageUrl ?? base_url('assets/images/Default.jpg')) ?>" id="product_preview_edit" class="product-preview" alt="Selected product image" onerror="this.src='<?= base_url('assets/images/Default.jpg') ?>'">
-                                        <div>
-                                            <div class="fw-semibold text-dark">Selected image preview</div>
-                                            <small class="text-muted">Select a new file and the preview updates before saving.</small>
+                                <div class="col-12 product-field product-image-field">
+                                    <label class="form-label">Change Product Image <span class="text-muted">(Optional)</span></label>
+                                    <input type="file" name="product_image" id="product_image_edit" class="product-file-input" accept=".jpg,.jpeg,.png,.webp">
+                                    <div class="product-image-inline">
+                                        <label for="product_image_edit" class="product-file-trigger w-100 mb-0">
+                                            <span class="product-file-button">Choose File</span>
+                                            <span class="product-file-name" id="product_file_name_edit">No file chosen</span>
+                                        </label>
+                                        <div class="product-preview-box">
+                                            <img src="<?= htmlspecialchars($productImageUrl ?? base_url('assets/images/Product_Default.png')) ?>" id="product_preview_edit" class="product-preview" alt="Selected product image" onerror="this.src='<?= base_url('assets/images/Product_Default.png') ?>'">
+                                            <small class="text-muted">Preview</small>
                                         </div>
                                     </div>
                                 </div>

@@ -27,7 +27,7 @@ class My_Controller extends CI_Controller
         if (!empty($this->admin) && empty($this->admin['role'])) {
 
             $adminRow = $this->db
-                ->select('role, profile_image, name, business_name, email')
+                ->select('role, profile_image, name, business_name, email, address')
                 ->where('id', $this->admin['user_id'])
                 ->get('users')
                 ->row();
@@ -39,6 +39,7 @@ class My_Controller extends CI_Controller
                 $this->admin['user_name'] = $adminRow->name ?? '';
                 $this->admin['business_name'] = $adminRow->business_name ?? '';
                 $this->admin['email'] = $adminRow->email ?? '';
+                $this->admin['address'] = $adminRow->address ?? '';
 
                 $this->session->set_userdata('admin', $this->admin);
             }

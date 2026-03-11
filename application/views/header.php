@@ -39,6 +39,32 @@
     <link rel="stylesheet" href="<?= base_url('assets/sass/semi-dark.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/sass/bordered-theme.css') ?>">
     <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --admin-sidebar-width: 260px;
+            --admin-sidebar-collapsed-width: 84px;
+            --admin-topbar-height: 76px;
+        }
+
+        .wrapper {
+            min-height: 100vh;
+            background: #f4f5f7;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         .sidebar-brand-wrap {
             padding: 0.25rem 0;
         }
@@ -114,16 +140,104 @@
         .sidebar-wrapper {
             background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
             border-right: 1px solid #e5edf7;
+            width: var(--admin-sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 1040;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        }
+
+        .page-wrapper {
+            min-height: calc(100vh - var(--admin-topbar-height));
+            margin-top: var(--admin-topbar-height);
+            margin-left: var(--admin-sidebar-width);
+            width: calc(100% - var(--admin-sidebar-width));
+            max-width: calc(100% - var(--admin-sidebar-width));
+            transition: margin-left .25s ease;
+            overflow-x: hidden;
         }
 
         .sidebar-header {
-            min-height: 88px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            bottom: auto;
+            width: 100%;
+            height: auto;
+            min-height: var(--admin-topbar-height);
             padding: 1.2rem 1.25rem;
             border-bottom: 1px solid #edf2f7;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+            z-index: 2;
+        }
+
+        .topbar {
+            left: var(--admin-sidebar-width);
+            right: 0;
+            height: var(--admin-topbar-height);
+            width: calc(100% - var(--admin-sidebar-width));
+            max-width: calc(100% - var(--admin-sidebar-width));
+            margin-left: 0;
+            transition: left .25s ease;
+            z-index: 1030;
+        }
+
+        .topbar .navbar {
+            min-height: var(--admin-topbar-height);
+            padding-inline: 1.5rem;
+            flex-wrap: nowrap;
+            position: relative;
+        }
+
+        .mobile-toggle-menu {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            color: #0f172a;
+            background: #ffffff;
+            border: 1px solid #dbe4f0;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+            cursor: pointer;
+            flex: 0 0 auto;
+            position: relative;
+            z-index: 3;
+        }
+
+        .mobile-toggle-menu i {
+            font-size: 1.35rem;
+            line-height: 1;
+        }
+
+        .page-content {
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        .page-content>* {
+            max-width: 100%;
+        }
+
+        img,
+        svg,
+        canvas,
+        table,
+        .card,
+        .table-responsive,
+        .row {
+            max-width: 100%;
         }
 
         #menu {
-            padding: 1rem 0.85rem;
+            padding: 1rem 0.85rem 1.5rem;
         }
 
         #menu>li {
@@ -168,6 +282,93 @@
             visibility: visible;
         }
 
+        body.sidebar-collapsed .sidebar-wrapper {
+            width: var(--admin-sidebar-collapsed-width);
+        }
+
+        body.sidebar-collapsed .sidebar-wrapper .menu-title {
+            display: none;
+        }
+
+        body.sidebar-collapsed .sidebar-wrapper .sidebar-brand-wrap {
+            display: none;
+        }
+
+        body.sidebar-collapsed .sidebar-wrapper .mobile-toggle-icon {
+            display: none;
+        }
+
+        body.sidebar-collapsed .page-wrapper,
+        body.sidebar-collapsed .topbar {
+            margin-left: 0;
+        }
+
+        body.sidebar-collapsed .page-wrapper {
+            margin-left: var(--admin-sidebar-collapsed-width);
+            width: calc(100% - var(--admin-sidebar-collapsed-width));
+            max-width: calc(100% - var(--admin-sidebar-collapsed-width));
+        }
+
+        body.sidebar-collapsed .topbar {
+            left: var(--admin-sidebar-collapsed-width);
+            width: calc(100% - var(--admin-sidebar-collapsed-width));
+            max-width: calc(100% - var(--admin-sidebar-collapsed-width));
+        }
+
+        body.sidebar-collapsed .topbar .navbar {
+            padding-left: 1.75rem;
+        }
+
+        body.sidebar-collapsed .mobile-toggle-menu {
+            position: fixed;
+            top: 16px;
+            left: calc(var(--admin-sidebar-collapsed-width) + 16px);
+            z-index: 1061;
+        }
+
+        body.sidebar-collapsed.sidebar-hover-open .sidebar-wrapper {
+            width: var(--admin-sidebar-width);
+        }
+
+        body.sidebar-collapsed.sidebar-hover-open .sidebar-wrapper .sidebar-brand-wrap {
+            display: block;
+        }
+
+        body.sidebar-collapsed.sidebar-hover-open .sidebar-wrapper .menu-title {
+            display: block;
+        }
+
+        body.sidebar-collapsed.sidebar-hover-open .sidebar-wrapper #menu>li>a {
+            justify-content: flex-start;
+        }
+
+        body.sidebar-collapsed.sidebar-hover-open .sidebar-wrapper .mobile-toggle-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.sidebar-collapsed.sidebar-hover-open .sidebar-wrapper {
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+        }
+
+        .mobile-toggle-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 12px;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            background: #eef4ff;
+            border: 1px solid #d7e5ff;
+            cursor: pointer;
+        }
+
+        .mobile-toggle-icon i {
+            font-size: 1.25rem;
+        }
+
         @media (max-width: 991.98px) {
             .sidebar-wrapper {
                 position: fixed;
@@ -178,7 +379,7 @@
                 max-width: calc(100vw - 32px);
                 transform: translateX(-100%);
                 transition: transform 0.25s ease;
-                z-index: 999;
+                z-index: 1050;
             }
 
             body.mobile-sidebar-open .sidebar-wrapper {
@@ -188,7 +389,9 @@
             .page-wrapper,
             .topbar {
                 margin-left: 0 !important;
+                left: 0 !important;
                 width: 100% !important;
+                max-width: 100% !important;
             }
 
             .page-content {
@@ -197,6 +400,14 @@
 
             .topbar .navbar {
                 padding-inline: 0.75rem;
+            }
+
+            .mobile-toggle-menu,
+            body.sidebar-collapsed .mobile-toggle-menu {
+                position: relative;
+                top: auto;
+                left: auto;
+                z-index: 3;
             }
 
             .user-box {
@@ -211,9 +422,14 @@
             .sidebar-header {
                 padding-right: 3.5rem;
             }
+
+            .mobile-toggle-icon {
+                display: inline-flex !important;
+            }
         }
 
         @media (max-width: 767.98px) {
+
             .dashboard-shell,
             .category-shell,
             .product-shell,
@@ -279,12 +495,13 @@
         <div class="mobile-sidebar-backdrop"></div>
         <div class="sidebar-wrapper" data-simplebar="true">
             <div class="sidebar-header">
-                <div></div>
                 <div class="sidebar-brand-wrap">
                     <div class="sidebar-brand-kicker">Business</div>
                     <div class="sidebar-brand-img"><?= htmlspecialchars($sidebarBrand) ?></div>
                 </div>
-                <div class="mobile-toggle-icon ms-auto"><i class='bx bx-x'></i></div>
+                <div class="mobile-toggle-icon ms-auto">
+                    <i class='bx bx-x'></i>
+                </div>
             </div>
             <ul class="metismenu" id="menu">
                 <?php if ($role === 'admin'): ?>
@@ -304,6 +521,18 @@
                         <a href="<?= base_url('product'); ?>" class="<?= $currentPath === 'product' || strpos($currentPath, 'product/') === 0 ? 'is-active' : '' ?>">
                             <div class="parent-icon"><i class='bx bx-box'></i></div>
                             <div class="menu-title">Product</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url('sales'); ?>" class="<?= $currentPath === 'sales' || strpos($currentPath, 'sales/') === 0 ? 'is-active' : '' ?>">
+                            <div class="parent-icon"><i class='bx bx-receipt'></i></div>
+                            <div class="menu-title">Sales</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url('whatsapp-connect'); ?>" class="<?= $currentPath === 'whatsapp-connect' ? 'is-active' : '' ?>">
+                            <div class="parent-icon"><i class='bx bxl-whatsapp'></i></div>
+                            <div class="menu-title">WhatsApp Connect</div>
                         </a>
                     </li>
                 <?php endif; ?>

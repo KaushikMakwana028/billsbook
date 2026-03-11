@@ -86,6 +86,10 @@
                 border-color: #dbe3ef;
             }
 
+            .profile-field textarea.form-control {
+                min-height: 120px;
+            }
+
             .profile-field .form-control:focus {
                 border-color: #60a5fa;
                 box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.18);
@@ -156,6 +160,11 @@
                                     <label class="form-label">Mobile</label>
                                     <input type="text" name="mobile" value="<?= set_value('mobile', $user['mobile'] ?? '') ?>" class="form-control" placeholder="Enter mobile number">
                                     <?= form_error('mobile') ?>
+                                </div>
+                                <div class="col-12 profile-field">
+                                    <label class="form-label">Address</label>
+                                    <textarea name="address" class="form-control" placeholder="Enter address"><?= set_value('address', $user['address'] ?? '') ?></textarea>
+                                    <?= form_error('address') ?>
                                 </div>
                                 <div class="col-12 d-flex align-items-center justify-content-between flex-wrap gap-3 pt-2">
                                     <!-- <small class="text-muted">Allowed image types: JPG, JPEG, PNG, WEBP. Max size 2MB.</small> -->

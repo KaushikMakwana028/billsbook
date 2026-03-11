@@ -42,6 +42,7 @@ class Product extends My_Controller
         $this->form_validation->set_rules('name', 'Product Name', 'required|trim');
         $this->form_validation->set_rules('description', 'Description', 'trim');
         $this->form_validation->set_rules('price', 'Price', 'required|callback_valid_price');
+        $this->form_validation->set_rules('quantity', 'Quantity', 'required|integer|greater_than_equal_to[0]');
 
         if ($this->form_validation->run() === false) {
             $data = $this->buildBaseData($adminId);
@@ -78,6 +79,7 @@ class Product extends My_Controller
             'name' => trim((string) $this->input->post('name')),
             'description' => trim((string) $this->input->post('description')),
             'price' => $this->normalizePrice((string) $this->input->post('price')),
+            'quantity' => (int) $this->input->post('quantity'),
             'image' => $image,
             'isActive' => 1,
             'created_on' => date('Y-m-d')
@@ -132,6 +134,7 @@ class Product extends My_Controller
         $this->form_validation->set_rules('name', 'Product Name', 'required|trim');
         $this->form_validation->set_rules('description', 'Description', 'trim');
         $this->form_validation->set_rules('price', 'Price', 'required|callback_valid_price');
+        $this->form_validation->set_rules('quantity', 'Quantity', 'required|integer|greater_than_equal_to[0]');
 
         if ($this->form_validation->run() === false) {
             $data = $this->buildBaseData($adminId);
@@ -178,6 +181,7 @@ class Product extends My_Controller
                 'name' => trim((string) $this->input->post('name')),
                 'description' => trim((string) $this->input->post('description')),
                 'price' => $this->normalizePrice((string) $this->input->post('price')),
+                'quantity' => (int) $this->input->post('quantity'),
                 'image' => $image
             ]);
 
@@ -307,7 +311,7 @@ class Product extends My_Controller
     private function resolveProductImage(string $image): string
     {
         if ($image === '') {
-            return base_url('assets/images/Default.jpg');
+            return base_url('assets/images/Product_Default.png');
         }
 
         if (preg_match('#^https?://#i', $image)) {

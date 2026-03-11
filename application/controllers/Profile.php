@@ -38,6 +38,7 @@ class Profile extends My_Controller
         $this->form_validation->set_rules('business_name', 'Business Name', 'required|trim');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('mobile', 'Mobile', 'required|regex_match[/^[0-9]{10}$/]');
+        $this->form_validation->set_rules('address', 'Address', 'trim');
 
         if ($this->form_validation->run() === false) {
             $data = $this->buildViewData($user);
@@ -104,6 +105,7 @@ class Profile extends My_Controller
             'business_name' => trim((string) $this->input->post('business_name')),
             'email' => $email,
             'mobile' => $mobile,
+            'address' => trim((string) $this->input->post('address')),
             'profile_image' => $profileImage
         ];
 
@@ -113,6 +115,7 @@ class Profile extends My_Controller
         $sessionData['user_name'] = $updateData['name'];
         $sessionData['business_name'] = $updateData['business_name'];
         $sessionData['email'] = $updateData['email'];
+        $sessionData['address'] = $updateData['address'];
         $sessionData['profile_image'] = $updateData['profile_image'];
         $this->session->set_userdata('admin', $sessionData);
 

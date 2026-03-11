@@ -17,6 +17,7 @@
         var toggleButton = document.querySelector('.mobile-toggle-menu');
         var closeButton = document.querySelector('.mobile-toggle-icon');
         var backdrop = document.querySelector('.mobile-sidebar-backdrop');
+        var hoverSuspended = false;
 
         document.querySelectorAll('.top-menu .dropdown, .top-menu .dropdown-menu').forEach(function(el) {
             el.classList.remove('show');
@@ -27,13 +28,25 @@
             body.classList.remove('mobile-sidebar-open');
         }
 
+        function isDesktop() {
+            return window.innerWidth > 991.98;
+        }
+
+        function clearDesktopHoverState() {
+            body.classList.remove('sidebar-hover-open');
+        }
+
         function toggleMobileSidebar(event) {
             if (event) {
                 event.preventDefault();
             }
 
-            if (window.innerWidth <= 991.98) {
+            if (!isDesktop()) {
                 body.classList.toggle('mobile-sidebar-open');
+            } else {
+                body.classList.toggle('sidebar-collapsed');
+                clearDesktopHoverState();
+                hoverSuspended = false;
             }
         }
 
@@ -44,7 +57,15 @@
         if (closeButton) {
             closeButton.addEventListener('click', function(event) {
                 event.preventDefault();
-                closeMobileSidebar();
+                if (!isDesktop()) {
+                    closeMobileSidebar();
+                    return;
+                }
+
+                if (body.classList.contains('sidebar-collapsed')) {
+                    clearDesktopHoverState();
+                    hoverSuspended = true;
+                }
             });
         }
 
@@ -53,9 +74,22 @@
         }
 
         if (sidebar) {
+            sidebar.addEventListener('mouseenter', function() {
+                if (isDesktop() && body.classList.contains('sidebar-collapsed') && !hoverSuspended) {
+                    body.classList.add('sidebar-hover-open');
+                }
+            });
+
+            sidebar.addEventListener('mouseleave', function() {
+                if (isDesktop()) {
+                    clearDesktopHoverState();
+                    hoverSuspended = false;
+                }
+            });
+
             sidebar.querySelectorAll('a').forEach(function(link) {
                 link.addEventListener('click', function() {
-                    if (window.innerWidth <= 991.98) {
+                    if (!isDesktop()) {
                         closeMobileSidebar();
                     }
                 });
@@ -63,9 +97,14 @@
         }
 
         window.addEventListener('resize', function() {
-            if (window.innerWidth > 991.98) {
+            if (isDesktop()) {
                 closeMobileSidebar();
+            } else {
+                body.classList.remove('sidebar-collapsed');
             }
+
+            clearDesktopHoverState();
+            hoverSuspended = false;
         });
 
         document.querySelectorAll('.js-swal-delete').forEach(function(el) {

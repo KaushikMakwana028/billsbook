@@ -22,6 +22,35 @@ class Dashboard extends My_Controller
             ->where('admin_id', $adminId)
             ->where('isActive', 1)
             ->count_all_results('product');
+        $customerCount = $this->db
+            ->where('admin_id', $adminId)
+            ->where('isActive', 1)
+            ->count_all_results('customers');
+        $salesCount = $this->db
+            ->where('admin_id', $adminId)
+            ->count_all_results('sales');
+        $salesRevenueRow = $this->db
+            ->select_sum('grand_total')
+            ->where('admin_id', $adminId)
+            ->get('sales')
+            ->row_array();
+        $lowStockProducts = $this->db
+            ->where('admin_id', $adminId)
+            ->where('isActive', 1)
+            ->where('quantity <=', 5)
+            ->order_by('quantity', 'ASC')
+            ->order_by('id', 'DESC')
+            ->get('product')
+            ->result_array();
+        $recentSales = $this->db
+            ->select('sales.invoice_number, sales.grand_total, sales.sale_date, customers.name AS customer_name')
+            ->from('sales')
+            ->join('customers', 'customers.id = sales.customer_id', 'left')
+            ->where('sales.admin_id', $adminId)
+            ->order_by('sales.id', 'DESC')
+            ->limit(5)
+            ->get()
+            ->result_array();
 
         if (!empty($profileImage) && !preg_match('#^https?://#i', $profileImage)) {
             $profileImage = (strpos($profileImage, 'uploads/') === 0 || strpos($profileImage, 'assets/') === 0)
@@ -42,6 +71,12 @@ class Dashboard extends My_Controller
         $data['pageTitle'] = 'Dashboard';
         $data['categoryCount'] = $categoryCount;
         $data['productCount'] = $productCount;
+        $data['customerCount'] = $customerCount;
+        $data['salesCount'] = $salesCount;
+        $data['salesRevenue'] = (float) ($salesRevenueRow['grand_total'] ?? 0);
+        $data['lowStockProducts'] = $lowStockProducts;
+        $data['lowStockCount'] = count($lowStockProducts);
+        $data['recentSales'] = $recentSales;
 
         $this->load->view('header', $data);
         $this->load->view('dashboard_view', $data);

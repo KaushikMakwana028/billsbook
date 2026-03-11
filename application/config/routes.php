@@ -69,6 +69,12 @@ $route['product/store'] = 'product/store';
 $route['product/edit/(:num)'] = 'product/edit/$1';
 $route['product/update/(:num)'] = 'product/update/$1';
 $route['product/delete/(:num)'] = 'product/delete/$1';
+$route['sales'] = 'sales/index';
+$route['sales/add'] = 'sales/add';
+$route['sales/store'] = 'sales/store';
+$route['sales/customer-lookup'] = 'sales/customer_lookup';
+$route['sales/download/(:num)'] = 'sales/download/$1';
+$route['whatsapp-connect'] = 'sales/whatsapp_connect';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

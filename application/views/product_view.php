@@ -50,6 +50,11 @@
                 color: #16a34a;
             }
 
+            .product-stock {
+                font-weight: 700;
+                color: #0f172a;
+            }
+
             .product-empty {
                 padding: 2.5rem;
                 text-align: center;
@@ -81,6 +86,7 @@
                                         <th>Product</th>
                                         <th>Category</th>
                                         <th>Price</th>
+                                        <th>Stock</th>
                                         <th>Created On</th>
                                         <th class="text-end">Action</th>
                                     </tr>
@@ -88,12 +94,12 @@
                                 <tbody>
                                     <?php if (!empty($products)): ?>
                                         <?php foreach ($products as $index => $product): ?>
-                                            <?php $imageSource = !empty($product['image']) ? base_url('uploads/product/' . ltrim($product['image'], '/')) : base_url('assets/images/Default.jpg'); ?>
+                                            <?php $imageSource = !empty($product['image']) ? base_url('uploads/product/' . ltrim($product['image'], '/')) : base_url('assets/images/Product_Default.png'); ?>
                                             <tr>
                                                 <td><?= $index + 1 ?></td>
                                                 <td>
                                                     <div class="d-flex align-items-center gap-3">
-                                                        <img src="<?= htmlspecialchars($imageSource) ?>" class="product-thumb" alt="Product image" onerror="this.src='<?= base_url('assets/images/Default.jpg') ?>'">
+                                                        <img src="<?= htmlspecialchars($imageSource) ?>" class="product-thumb" alt="Product image" onerror="this.src='<?= base_url('assets/images/Product_Default.png') ?>'">
                                                         <div>
                                                             <div class="product-name"><?= htmlspecialchars($product['name']) ?></div>
                                                             <div class="product-meta"><?= htmlspecialchars($product['description'] !== '' ? $product['description'] : 'No description added') ?></div>
@@ -102,6 +108,7 @@
                                                 </td>
                                                 <td><?= htmlspecialchars($product['category_name'] ?? 'Uncategorized') ?></td>
                                                 <td class="product-price">Rs. <?= number_format((float) $product['price'], 2) ?></td>
+                                                <td class="product-stock"><?= (int) ($product['quantity'] ?? 0) ?></td>
                                                 <td><?= htmlspecialchars($product['created_on']) ?></td>
                                                 <td class="text-end">
                                                     <a href="<?= base_url('product/edit/' . (int) $product['id']) ?>" class="btn btn-sm btn-outline-primary">Edit</a>
@@ -111,7 +118,7 @@
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="6" class="product-empty text-danger fw-bold">No products found for this admin yet.</td>
+                                            <td colspan="7" class="product-empty text-danger fw-bold">No products found for this admin yet.</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
