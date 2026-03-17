@@ -38,6 +38,12 @@
     <link rel="stylesheet" href="<?= base_url('assets/sass/dark-theme.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/sass/semi-dark.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/sass/bordered-theme.css') ?>">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         html,
         body {
@@ -468,6 +474,9 @@
 <body class="sidebar-preload">
     <?php
     $adminSession = (array) ($this->session->userdata('admin') ?? []);
+    // ADD THIS LINE
+    $privacyModeEnabled = $adminSession['privacy_mode'] ?? false;
+
     $roleValue = $role ?? ($adminSession['role'] ?? 'admin');
     $role = ((string) $roleValue === '1' || $roleValue === 1 || $roleValue === 'admin') ? 'admin' : (string) $roleValue;
     $userName = $userName ?? ($adminSession['user_name'] ?? ($adminSession['name'] ?? 'Admin'));
@@ -561,6 +570,22 @@
                                     <i class="bx bx-user fs-5"></i><span>Profile</span>
                                 </a>
                             </li>
+
+                            <!-- Privacy Mode Toggle Option -->
+                            <?php if ($isDashboardPage): ?>
+                                <li>
+                                    <div class="dropdown-item d-flex align-items-center justify-content-between" id="privacyModeToggle">
+                                        <span class="d-flex align-items-center">
+                                            <i class="bx bx-lock-alt fs-5 me-2"></i>
+                                            <span>Privacy Mode</span>
+                                        </span>
+                                        <div class="form-check form-switch m-0">
+                                            <input class="form-check-input" type="checkbox" id="privacySwitch" <?= $privacyModeEnabled ? 'checked' : '' ?>>
+                                        </div>
+                                    </div>
+                                </li>
+                            <?php endif; ?>
+
                             <li>
                                 <div class="dropdown-divider mb-0"></div>
                             </li>

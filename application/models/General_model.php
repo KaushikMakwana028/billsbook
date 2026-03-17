@@ -88,4 +88,5 @@ class General_model extends CI_Model
             ->get('categories')
             ->result();
     }
+
 }

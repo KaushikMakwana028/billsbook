@@ -130,6 +130,21 @@
             });
         });
     });
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        let privacyMode = localStorage.getItem("privacyMode");
+
+        if (privacyMode === "true") {
+            updatePrivacyUI(true);
+
+            let switchBtn = document.getElementById("privacySwitch");
+            if (switchBtn) {
+                switchBtn.checked = true;
+            }
+        }
+
+    });
 </script>
 <?php
 $flashSuccess = $this->session->flashdata('success');

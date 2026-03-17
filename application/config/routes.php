@@ -74,7 +74,11 @@ $route['sales/add'] = 'sales/add';
 $route['sales/store'] = 'sales/store';
 $route['sales/customer-lookup'] = 'sales/customer_lookup';
 $route['sales/download/(:num)'] = 'sales/download/$1';
+$route['sales/send-whatsapp/(:num)'] = 'sales/send_whatsapp/$1';
 $route['whatsapp-connect'] = 'sales/whatsapp_connect';
+$route['whatsapp/status'] = 'sales/whatsapp_status';
+$route['whatsapp/reset'] = 'sales/whatsapp_reset';
+$route['whatsapp/disconnect'] = 'sales/whatsapp_disconnect';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
